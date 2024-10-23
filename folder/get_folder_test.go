@@ -92,14 +92,6 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
     }
 }
 
-package folder_test
-
-import (
-    "testing"
-    "github.com/georgechieng-sc/interns-2022/folder"
-    "reflect"
-)
-
 func Test_folder_GetUniqueChildren(t *testing.T) {
     t.Parallel()
 
