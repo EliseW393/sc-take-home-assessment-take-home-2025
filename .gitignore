@@ -1,0 +1,25 @@
+# Ignoring Go binaries
+*.exe
+*.dll
+*.so
+*.dylib
+bin/
+
+# Ignoring object files
+*.o
+*.a
+
+# Ignoring temp output files
+*.out
+*.log
+*.tmp
+
+# macOS-specific file that stores folder attributes, not useful for the project
+.DS_Store
+
+# VSCode-specific settings
+.vscode/
+
+# Ignore Go module and package files
+go.sum
+go.mod
