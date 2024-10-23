@@ -6,21 +6,17 @@ import (
 	"encoding/json" // working with JSON
 )
 
-// driver struct not required 
-func GetAllFolders() []Folder { // returns all folders 
+func GetAllFolders() []Folder { 
 	return GetSampleData()
 }
 
-// two functions below require a driver struct
-// (f *driver) the reciever: f is the reciever variable, refers to current instance of driver struct
-// the * means f is a pointer to the driver struct
-func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder { // returns all folders by specific orgID (loop to filter)
-	folders := f.folders // accessing folders in driver struct
+func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder { 
+	folders := f.folders 
 
 	res := []Folder{}
-	for _, f := range folders { // f the loop variable representing each individual Folder struct, underscore ignores index
-		if f.OrgId == orgID { // checks if org ID of current Folder object matches parameter org ID
-			res = append(res, f) // adding to the res slice (dynamic array)
+	for _, f := range folders { 
+		if f.OrgId == orgID { 
+			res = append(res, f) 
 		}
 	}
 
@@ -28,49 +24,40 @@ func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder { // returns all fo
 
 }
 
-// method belongs to the driver struct 
-// working with a pointer to the driver struct - memory, performance
-// assumed driver struct exists, f is its pointer
-// has attribute with slide of all Folders read from JSON file
-// 
+func (f *driver) GetUniqueChildren(path string, uniqueChildren *[]string) {
+	// (Note; Don't forget function description!)
+	// TODO: Implement logic to extract unique children from string
+}
 
+func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder { 
+	// (Note; Don't forget function description!)
+	// TODO: Implement logic to get all child folders of given parent, with orgID
 
-//[]Folder - a slice of type Folder
-//{} empty
-// only one type, unless you declare slice of interfaces 
-// interface defines a set of methods a type must implement 
-// type that implements all those methods satisfies the interface 
-// but can have different behaviours for those methods 
-func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder { // don't forget function description!
-	
-// Create the []Folder{} slice
-	// Retrieve all folders for the given orgID using GetFoldersByOrgID, put in variable
-	
-	// Create the []Folder{} slice
+	// 1: Retrieve all folders for the given orgID
+		// - Call GetFoldersByOrgID on f and pass in the orgID argument.
+		// - Store the result in a variable, res.
 
-	// iterate through filtered folders, check for parent name -> if yes, append to Folder
+	// 2: Create an empty slice to hold the final folders
 
-	// return Folders - slice of Folder objects (structs)
+	// 3: Create an empty slice to hold unique child names
 
+	// 4: Iterate through each folder in res (filtered by orgID)
+		// Check if the folder's path contains the parent name (string.Contains)
+			// Truncate the right string (may be empty)
+
+			// 5: Call the helper function to find unique children
+        	// Use pointer to the unique child name slice
+        	// If no children are found, return 
+        	// If children are found, split and append them to slice if unique
+
+	// 6: Iterate through the unique child name list
+		// Append matching folders from res to finalFolders based on the child name
+
+	// 7: Return slice of folders, children of given folder name
 	return []Folder{}
 }
 
-
-
-
-// implementation for fetching folders baded on certain criteria
-
-// list of paths represented as strings in JSON file, dot separated 
-
-// notes
-// include: all child folders, including deeper nested ones
-// e.g. if given folder is 'b': a.b.c and d.b.c included, a.b.c and a.b.f included 
-
-// if something like alpha.bravo.charlie, searching for bravo, would include charlie, with this path : "alpha.bravo.charlie"
-
-
-// type Folder struct {
-//    Name  string
-//    OrgID uuid.UUID
-//    Path  string
-//}
+// Useful string methods found:
+// strings.Contains: if string contains another substring
+// strings.Index: position of substring within string
+// strings.Split: split into slice of substrings by delimeter
