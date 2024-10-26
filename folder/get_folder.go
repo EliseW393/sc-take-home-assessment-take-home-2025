@@ -2,7 +2,9 @@ package folder
 
 import "github.com/gofrs/uuid"
 import (
-	"strings" // string manipulation functions
+	//"fmt"
+	"strings"
+	//"github.com/gofrs/uuid"
 )
 
 func GetAllFolders() []Folder { 
@@ -31,6 +33,7 @@ func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
 		// - Call GetFoldersByOrgID on f and pass in the orgID argument.
 		// - Store the result in a variable, res.
 	res := f.GetFoldersByOrgID(orgID)
+	//fmt.Printf("Folders for orgID %s: %+v\n", orgID, res)
 
 	// 2: Create an empty slice to hold the final folders
 	var finalFolders []Folder
