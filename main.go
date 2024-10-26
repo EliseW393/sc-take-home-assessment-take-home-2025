@@ -42,13 +42,13 @@ func main() {
 	fmt.Println("\n================= Initial Folder Structure =================")
 	folder.PrettyPrint(res)
 
-	name := "steady-insect"     
-	dst := "endless-red-hulk"  
+	name := "settling-hobgoblin"     
+	dst := "helped-blackheart"  
 
 	fmt.Printf("\nMoving folder '%s' to new destination '%s'...\n", name, dst)
 	updatedFolders, err := folderDriver.MoveFolder(name, dst)
 	if err != nil {
-		fmt.Printf("Error") // fix! 
+		fmt.Printf("%s", err) // fix! 
 		return
 	}
 	folder.PrettyPrint(updatedFolders)
