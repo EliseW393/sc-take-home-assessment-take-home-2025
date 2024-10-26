@@ -26,6 +26,18 @@ func main() {
 	folder.PrettyPrint(res)
 	fmt.Printf("\n Folders for orgID: %s", orgID) // prints all folders and filtered folders for specific ID
 	folder.PrettyPrint(orgFolder) 
+
+	// Calling GetAllChildFolders
+	fmt.Printf("\nRetreiving all child folders for 'stunning-horridus' under orgID %s:\n", orgID)
+	childFolders := folderDriver.GetAllChildFolders(orgID, "stunning-horridus")
+	folder.PrettyPrint(childFolders)
+
+	// Calling GetAllChildFolders (2)
+	secondOrgId := uuid.FromStringOrNil("38b9879b-f73b-4b0e-b9d9-4fc4c23643a7")
+	fmt.Printf("\nRetrieving all child folders for 'creative-scalphunter' under orgID %s:\n", secondOrgId)
+	childFoldersTwo := folderDriver.GetAllChildFolders(secondOrgId, "creative-scalphunter")
+	folder.PrettyPrint(childFoldersTwo)
+
 }
 
 // creates a new instance of a driver, calling methods 
