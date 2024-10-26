@@ -38,23 +38,20 @@ func main() {
 	childFoldersTwo := folderDriver.GetAllChildFolders(secondOrgId, "creative-scalphunter")
 	folder.PrettyPrint(childFoldersTwo)
 
+	// moving folders - working
 	fmt.Println("\n================= Initial Folder Structure =================")
 	folder.PrettyPrint(res)
 
-	name := "folder-name-to-move"     
-	dst := "new-destination-prefix"  
+	name := "steady-insect"     
+	dst := "endless-red-hulk"  
 
 	fmt.Printf("\nMoving folder '%s' to new destination '%s'...\n", name, dst)
 	updatedFolders, err := folderDriver.MoveFolder(name, dst)
 	if err != nil {
-		fmt.Println("Error moving folder:", err)
-	} else {
-		fmt.Println("Folder moved successfully! Updated folders:")
-		folder.PrettyPrint(updatedFolders)
+		fmt.Printf("Error") // fix! 
+		return
 	}
-
-	fmt.Println("\n================= Updated Folder Structure =================")
-	folder.PrettyPrint(folderDriver.GetAllFolders())
+	folder.PrettyPrint(updatedFolders)
 
 }
 
