@@ -27,8 +27,7 @@ func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder {
 
 func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder { 
 	// (Note; Don't forget function description!)
-	// TODO: Implement logic to get all child folders of given parent, with orgID
-
+	
 	// 1: Retrieve all folders for the given orgID
 		// - Call GetFoldersByOrgID on f and pass in the orgID argument.
 		// - Store the result in a variable, res.
