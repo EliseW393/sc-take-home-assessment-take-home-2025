@@ -43,7 +43,6 @@ func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
 			finalFolders = append(finalFolders, folder)
 		}
 	}
-		}
 	// 7: Return slice of folders, children of given folder name
 	return finalFolders
 }
