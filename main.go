@@ -8,21 +8,14 @@ import (
 
 func main() {
 
-	// Generate new sample data
-	res := folder.GenerateData() // Generate fresh folder data
-	folder.PrettyPrint(res)      // Print the generated data
-	folder.WriteSampleData(res)  // Write the data to sample.json
+	//res := folder.GenerateData() 
+	//folder.PrettyPrint(res)     
+	//folder.WriteSampleData(res)  
 
-	// Use the DefaultOrgID to filter folders
 	orgID := uuid.FromStringOrNil(folder.DefaultOrgID)
 
-	// Get all folders (from the sample data)
-	folderData := folder.GetSampleData() // Load sample data from sample.json
-
-	// Create a new folder driver
+	folderData := folder.GetSampleData() 
 	folderDriver := folder.NewDriver(folderData)
-
-	// Get folders by organisation ID
 	orgFolder := folderDriver.GetFoldersByOrgID(orgID)
 
 	fmt.Printf("\nFolders for orgID: %s", orgID)
@@ -33,17 +26,14 @@ func main() {
 	childFolders := folderDriver.GetAllChildFolders(orgID, "stunning-horridus")
 	folder.PrettyPrint(childFolders)
 
-	// Uncomment the following code to test moving folders if needed
-	/*
-	name := "steady-insect"
-	dst := "iruwhsdfniuwjke" // testing informally 
-
+	// test moving folders if needed
+	name := "sharing-rictor"
+	dst := "ultimate-random" // testing informally 
 	fmt.Printf("\nMoving folder '%s' to new destination '%s'...\n", name, dst)
 	updatedFolders, err := folderDriver.MoveFolder(name, dst)
 	if err != nil {
-		fmt.Printf("%s", err) // fix!
+		fmt.Printf("%s", err)
 		return
 	}
 	folder.PrettyPrint(updatedFolders)
-	*/
 }

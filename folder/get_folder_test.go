@@ -8,7 +8,6 @@ import (
 	// "github.com/stretchr/testify/assert" // more expressive assertions
 )
 
-// feel free to change how the unit test is structured
 func Test_folder_GetFoldersByOrgID(t *testing.T) {
 	t.Parallel()
     
@@ -194,12 +193,30 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 			orgID: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"),
 			parentName: "capable-star-spangled",
 			want: []folder.Folder{
-                {Name: "golden-freefall", OrgId: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"), Paths: "capable-star-spangled.golden-freefall"},
-                {Name: "devoted-burka", OrgId: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"), Paths: "capable-star-spangled.golden-freefall.devoted-burka"},
-                {Name: "definite-lizard", OrgId: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"), Paths: "capable-star-spangled.golden-freefall.devoted-burka.definite-lizard"},
-                {Name: "moving-micromax", OrgId: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"), Paths: "capable-star-spangled.golden-freefall.devoted-burka.moving-micromax"},
-                {Name: "trusted-superman", OrgId: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"), Paths: "capable-star-spangled.golden-freefall.trusted-superman"},
-                {Name: "stunning-black-panther", OrgId: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"), Paths: "capable-star-spangled.golden-freefall.trusted-superman.stunning-black-panther"},
+                {
+                    Name: "golden-freefall", 
+                    OrgId: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"), 
+                    Paths: "capable-star-spangled.golden-freefall"},
+                {
+                    Name: "devoted-burka", 
+                    OrgId: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"), 
+                    Paths: "capable-star-spangled.golden-freefall.devoted-burka"},
+                {
+                    Name: "definite-lizard", 
+                    OrgId: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"), 
+                    Paths: "capable-star-spangled.golden-freefall.devoted-burka.definite-lizard"},
+                {
+                    Name: "moving-micromax", 
+                    OrgId: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"), 
+                    Paths: "capable-star-spangled.golden-freefall.devoted-burka.moving-micromax"},
+                {
+                    Name: "trusted-superman", 
+                    OrgId: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"), 
+                    Paths: "capable-star-spangled.golden-freefall.trusted-superman"},
+                {
+                    Name: "stunning-black-panther", 
+                    OrgId: uuid.FromStringOrNil("e546a29e-4432-4243-8e71-f26aa8fbddbd"), 
+                    Paths: "capable-star-spangled.golden-freefall.trusted-superman.stunning-black-panther"},
             },
 		},
 		{
@@ -250,8 +267,8 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 
 	for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            f := folder.NewDriver(sampleFolders) // Create a driver with the sample data
-            got := f.GetAllChildFolders(tt.orgID, tt.parentName) // Call the function being tested
+            f := folder.NewDriver(sampleFolders) // Creates a driver with the sample data
+            got := f.GetAllChildFolders(tt.orgID, tt.parentName) // Calls the function being tested
 
             if len(got) != len(tt.want) {
                 t.Errorf("expected length %d, got %d", len(tt.want), len(got))

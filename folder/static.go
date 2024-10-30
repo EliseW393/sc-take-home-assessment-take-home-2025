@@ -24,7 +24,7 @@ const MaxRootSet = 3
 const MaxChild = 2
 
 // max depth of the tree
-const MaxDepth = 4
+const MaxDepth = 5
 
 // the default orgID that we will be using for testing
 const DefaultOrgID = "c1556e17-b7c0-45a3-a6ae-9546248fb17a"
