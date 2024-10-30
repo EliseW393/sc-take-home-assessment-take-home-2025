@@ -42,7 +42,7 @@ func main() {
 	folder.PrettyPrint(res)
 
 	name := "steady-insect"     
-	dst := "true-beetle"  
+	dst := "iruwhsdfniuwjke" // testing informally 
 
 	fmt.Printf("\nMoving folder '%s' to new destination '%s'...\n", name, dst)
 	updatedFolders, err := folderDriver.MoveFolder(name, dst)

@@ -2,9 +2,9 @@ package folder
 
 import "github.com/gofrs/uuid"
 import (
-	"fmt"
+	// "fmt"
 	"strings"
-	"github.com/gofrs/uuid"
+	// "github.com/gofrs/uuid"
 )
 
 func GetAllFolders() []Folder { 
@@ -25,34 +25,27 @@ func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder {
 
 }
 
+// GetAllChildFolders retrieves all child folders of a specified folder name within an organisation.
+// It filters folders by the given organization ID and returns those whose paths begin with the specified name.
 func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder { 
-	// (Note; Don't forget function description!)
 
 	res := f.GetFoldersByOrgID(orgID)
 	if len(res) == 0 {
-		// fmt.Println("Error: No folders found for the specified organisation ID")
-		// above not part of specified functionality (?)
+		// If no folders are found for the orgID, return empty slice 
 		return []Folder{} 
 	}
 
-	// 2: Create an empty slice to hold the final folders
+	// Slice to store child folders 
 	var finalFolders []Folder
-	parentExists := false
 
-	// 3: Iterate through each folder in res (filtered by orgID)
+	// Iterate over each folder in filtered results (res)
 	for _, folder := range res {
-		// Check if the folder's path contains the parent name 
+		// Check if the folder's path starts with the specified parent name
 		if strings.HasPrefix(folder.Paths, name+".") { 
-			// append that folder to the slice, as it is a child 
+			// Append matching folder to finalFolders as it is a child of the specified folder 
 			finalFolders = append(finalFolders, folder)
 		}
 	}
-	// 7: Return slice of folders, children of given folder name
+
 	return finalFolders
 }
-
-
-// Useful string methods found:
-// strings.Contains: if string contains another substring
-// strings.Index: position of substring within string
-// strings.Split: split into slice of substrings by delimeter

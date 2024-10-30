@@ -3,10 +3,11 @@ package folder
 import (
 	"errors"
 	"strings"
-	"regexp"
 	"github.com/gofrs/uuid"
 )
 
+// contains is used to check for an item in a slice of strings 
+// (i.e., if a destination folder exists in the list of children)
 func contains(slice []string, item string) bool {
     for _, v := range slice {
         if v == item {
@@ -16,37 +17,28 @@ func contains(slice []string, item string) bool {
     return false
 }
 
+// MoveFolder moves a specified source folder to a new destination folder within the same organisation.
+// It performs validation checks on the source and destination folders to make sure they exist, are in the same
+// organisation, and are not in a parent-child loop/cycle.
 func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
-	// (TODO: function description)
 
 	if name == "" || dst == "" {
 		emptyNameError := errors.New("Error: Source and destination folder names must not be empty\n")
 		return f.folders, emptyNameError
-	}
-
-	// functionality: if source and dst are the same
-	if name == dst {
+	} else if name == dst {
 		sourceAsDestError := errors.New("Error: Cannot move a folder to itself\n")
 		return f.folders, sourceAsDestError
 	}
 
-	// validPath := regexp.MustCompile(`^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-]+)*$`) // turns it into object to verify format
+	var sourceOrgID, dstOrgID uuid.UUID
+	sourceFound, destinationLocated := false, false
 
-	updatedFolders := make([]Folder, len(f.folders)) // assign - non declared, local
-	_ = copy(updatedFolders, f.folders) // ignore return value of copy 
-
-	var sourceOrgID uuid.UUID
-	var dstOrgID uuid.UUID 
-	sourceFound := false
-	destinationLocated := false
-
-	for _, folder := range updatedFolders {
+	// Locate source and destination folders to validate existence, obtain OrgIDs
+	for _, folder := range f.folders {
 		if folder.Name == name {
 			sourceOrgID = folder.OrgId
 			sourceFound = true
-		}
-
-		if folder.Name == dst {//&& updatedFolders[i].OrgId == sourceOrgID {
+		} else if folder.Name == dst {
 			dstOrgID = folder.OrgId 
 			destinationLocated = true
 		}
@@ -55,46 +47,39 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 	if !sourceFound { 
 		sourceNotExistError := errors.New("Error: Source folder does not exist\n")
 		return f.folders, sourceNotExistError
-	}
-
-	if !destinationLocated { // Not working - need to actually check name of folder too 
+	} else if !destinationLocated { 
 		dstNotExistError := errors.New("Error: Destination folder does not exist\n")
 		return f.folders, dstNotExistError
-	}
-
-	// if dst org ID doesnt match that of source - check orgID of folder where name == dst
-	if dstOrgID != sourceOrgID {
+	} else if dstOrgID != sourceOrgID {
 		diffOrgError := errors.New("Error: Cannot move a folder to a different organization\n")
 		return f.folders, diffOrgError
 	}
 
-	// iterate through every folder path
-	for i := range updatedFolders { // have to use i not _, otherwise modifying a copy
-		
-		// if !validPath.MatchString(updatedFolders[i].Paths) {
-			// invalidPathStructureError := errors.New("Error: Invalid folder path structure\n")
-			// return f.folders, invalidPathStructureError
-		// }
+	// Iterate through each folder path to update parent of source
+	for i := range f.folders { 
 
-		// split path into array, check where name is, add dst before, reconstruct path
-		pathLevels := strings.Split(updatedFolders[i].Paths, ".") // slice of path segments - check source exists first? save looping
+		// Split folder path into parts (individual folders) to check for child moves and apply changes
+		pathLevels := strings.Split(f.folders[i].Paths, ".") 
 
-		for j, folder := range pathLevels { // shouldnt iterate if its not there to begin with - check 
-			if folder == name { // pathLevels at j is equal to the name (source)
+		// Find location of source folder in path (if exists)
+		for j, folder := range pathLevels { // Iterating through path folders
+			if folder == name {
 
-				children := pathLevels[j+1:] // Only segments after `name`
+				// Checking if folders after source folder includes dst
+				children := pathLevels[j+1:] 
             	if contains(children, dst) {
 					childOfItselfError := errors.New("Error: Cannot move a folder to a child of itself\n")
                 	return f.folders, childOfItselfError
             	}
-
-				pathLevels[j] = dst + "." + folder // making it dst.name in the slice
-				updatedFolders[i].Paths = strings.Join(pathLevels, ".") // put back together
+				
+				// Update path of folder to reflect new destination (parent)
+				pathLevels[j] = dst + "." + folder 
+				f.folders[i].Paths = strings.Join(pathLevels, ".") 
 				break
 			}
 		}
 	}
 
-	return updatedFolders, nil
+	return f.folders, nil
 }	
 
