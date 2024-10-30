@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/georgechieng-sc/interns-2022/folder"
 	"github.com/gofrs/uuid"
 )
@@ -42,8 +41,8 @@ func main() {
 	fmt.Println("\n================= Initial Folder Structure =================")
 	folder.PrettyPrint(res)
 
-	name := "settling-hobgoblin"     
-	dst := "helped-blackheart"  
+	name := "steady-insect"     
+	dst := "true-beetle"  
 
 	fmt.Printf("\nMoving folder '%s' to new destination '%s'...\n", name, dst)
 	updatedFolders, err := folderDriver.MoveFolder(name, dst)

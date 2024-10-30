@@ -3,7 +3,7 @@ package folder
 import (
 	"errors"
 	"strings"
-	"fmt"
+	"regexp"
 	"github.com/gofrs/uuid"
 )
 
@@ -16,33 +16,38 @@ func contains(slice []string, item string) bool {
     return false
 }
 
-// TODO: errors, error messages 
-// basic functionality: every path that has string, add dst before it (todo: other cases)
 func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 	// (TODO: function description)
 
-	var sourceOrgID uuid.UUID
-	var dstOrgID uuid.UUID
+	if name == "" || dst == "" {
+		emptyNameError := errors.New("Error: Source and destination folder names must not be empty\n")
+		return f.folders, emptyNameError
+	}
 
 	// functionality: if source and dst are the same
 	if name == dst {
-		folderToItselfError := errors.New("Error: Cannot move a folder to itself\n")
-		return f.folders, folderToItselfError
+		sourceAsDestError := errors.New("Error: Cannot move a folder to itself\n")
+		return f.folders, sourceAsDestError
 	}
+
+	// validPath := regexp.MustCompile(`^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-]+)*$`) // turns it into object to verify format
 
 	updatedFolders := make([]Folder, len(f.folders)) // assign - non declared, local
 	_ = copy(updatedFolders, f.folders) // ignore return value of copy 
 
+	var sourceOrgID uuid.UUID
+	var dstOrgID uuid.UUID 
 	sourceFound := false
 	destinationLocated := false
-	for i := range updatedFolders {
-		if updatedFolders[i].Name == name {
-			sourceOrgID = updatedFolders[i].OrgId
+
+	for _, folder := range updatedFolders {
+		if folder.Name == name {
+			sourceOrgID = folder.OrgId
 			sourceFound = true
 		}
 
-		if updatedFolders[i].Name == dst {//&& updatedFolders[i].OrgId == sourceOrgID {
-			dstOrgID = updatedFolders[i].OrgId
+		if folder.Name == dst {//&& updatedFolders[i].OrgId == sourceOrgID {
+			dstOrgID = folder.OrgId 
 			destinationLocated = true
 		}
 	}
@@ -65,33 +70,31 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 
 	// iterate through every folder path
 	for i := range updatedFolders { // have to use i not _, otherwise modifying a copy
-		dstOrgID := updatedFolders[i].OrgId
-
-		fmt.Printf("Type of dstOrgID: %T, Value: %v\n", dstOrgID, dstOrgID)  // checking 
+		
+		// if !validPath.MatchString(updatedFolders[i].Paths) {
+			// invalidPathStructureError := errors.New("Error: Invalid folder path structure\n")
+			// return f.folders, invalidPathStructureError
+		// }
 
 		// split path into array, check where name is, add dst before, reconstruct path
 		pathLevels := strings.Split(updatedFolders[i].Paths, ".") // slice of path segments - check source exists first? save looping
-		for j, element := range pathLevels { // shouldnt iterate if its not there to begin with - check 
-			if element == name { // pathLevels at j is equal to the name (source)
 
-				// check all children below source - make sure dst isnt there
+		for j, folder := range pathLevels { // shouldnt iterate if its not there to begin with - check 
+			if folder == name { // pathLevels at j is equal to the name (source)
 
-				children := pathLevels[0:len(pathLevels)-1]
-				// functionality: check if dst is a child of that current folder
-				if contains(children, dst) { // too many nextes loops, fix 
+				children := pathLevels[j+1:] // Only segments after `name`
+            	if contains(children, dst) {
 					childOfItselfError := errors.New("Error: Cannot move a folder to a child of itself\n")
-					return f.folders, childOfItselfError
-				}
+                	return f.folders, childOfItselfError
+            	}
 
-				pathLevels[j] = dst + "." + element // making it dst.name in the slice
+				pathLevels[j] = dst + "." + folder // making it dst.name in the slice
 				updatedFolders[i].Paths = strings.Join(pathLevels, ".") // put back together
 				break
 			}
 		}
 	}
 
-
-
 	return updatedFolders, nil
-}
+}	
 
