@@ -71,7 +71,7 @@ func Test_folder_MoveFolder(t *testing.T) {
 			expectedErr: errors.New("Error: Cannot move a folder to itself\n"),
 		},
 
-		// child of itself test failing despite manual testing working
+		// Test for 'child of itself' condition: known issue where test fails despite successful manual testing.
 		{ 
 			name:   "Move folder to a child of itself",
 			source: "capable-star-spangled",
