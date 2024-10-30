@@ -51,6 +51,7 @@ func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
 	return finalFolders
 }
 
+
 // Useful string methods found:
 // strings.Contains: if string contains another substring
 // strings.Index: position of substring within string
