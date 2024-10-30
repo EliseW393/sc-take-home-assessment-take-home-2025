@@ -7,53 +7,43 @@ import (
 )
 
 func main() {
-	orgID := uuid.FromStringOrNil(folder.DefaultOrgID) // converts organisation string ID into an UUID, storing it in orgID
-	// returns nil if not valid UUID 
 
-	res := folder.GetAllFolders() // calling get all folders from folder.go, part of folder package
+	// Generate new sample data
+	res := folder.GenerateData() // Generate fresh folder data
+	folder.PrettyPrint(res)      // Print the generated data
+	folder.WriteSampleData(res)  // Write the data to sample.json
 
-	// example usage
-	folderDriver := folder.NewDriver(res) // creates a new folder driver
-	// creates a new struct interface, returned as IDriver interface type 
-	// struct implements the interface 
-	// interacting with struct through interface
-	// struct satifies the interface - implements all methods (match signatures defined in interface)
-	// get pointer to the struct, and Go knows it can call the interface methods 
-	
-	orgFolder := folderDriver.GetFoldersByOrgID(orgID) // filters based on organisation ID
+	// Use the DefaultOrgID to filter folders
+	orgID := uuid.FromStringOrNil(folder.DefaultOrgID)
 
-	folder.PrettyPrint(res)
-	fmt.Printf("\n Folders for orgID: %s", orgID) // prints all folders and filtered folders for specific ID
-	folder.PrettyPrint(orgFolder) 
+	// Get all folders (from the sample data)
+	folderData := folder.GetSampleData() // Load sample data from sample.json
 
-	// Calling GetAllChildFolders
-	fmt.Printf("\nRetreiving all child folders for 'stunning-horridus' under orgID %s:\n", orgID)
+	// Create a new folder driver
+	folderDriver := folder.NewDriver(folderData)
+
+	// Get folders by organisation ID
+	orgFolder := folderDriver.GetFoldersByOrgID(orgID)
+
+	fmt.Printf("\nFolders for orgID: %s", orgID)
+	folder.PrettyPrint(orgFolder)
+
+	// Example of retrieving all child folders
+	fmt.Printf("\nRetrieving all child folders for 'stunning-horridus' under orgID %s:\n", orgID)
 	childFolders := folderDriver.GetAllChildFolders(orgID, "stunning-horridus")
 	folder.PrettyPrint(childFolders)
 
-	// Calling GetAllChildFolders (2)
-	secondOrgId := uuid.FromStringOrNil("38b9879b-f73b-4b0e-b9d9-4fc4c23643a7")
-	fmt.Printf("\nRetrieving all child folders for 'creative-scalphunter' under orgID %s:\n", secondOrgId)
-	childFoldersTwo := folderDriver.GetAllChildFolders(secondOrgId, "creative-scalphunter")
-	folder.PrettyPrint(childFoldersTwo)
-
-	// moving folders - working
-	fmt.Println("\n================= Initial Folder Structure =================")
-	folder.PrettyPrint(res)
-
-	name := "steady-insect"     
+	// Uncomment the following code to test moving folders if needed
+	/*
+	name := "steady-insect"
 	dst := "iruwhsdfniuwjke" // testing informally 
 
 	fmt.Printf("\nMoving folder '%s' to new destination '%s'...\n", name, dst)
 	updatedFolders, err := folderDriver.MoveFolder(name, dst)
 	if err != nil {
-		fmt.Printf("%s", err) // fix! 
+		fmt.Printf("%s", err) // fix!
 		return
 	}
 	folder.PrettyPrint(updatedFolders)
-
+	*/
 }
-
-// creates a new instance of a driver, calling methods 
-// folder.go defines driver struct (holds folder data) and IDriver interface
-// get_folder.go defined the logic for the methods  

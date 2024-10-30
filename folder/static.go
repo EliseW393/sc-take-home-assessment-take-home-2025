@@ -18,13 +18,13 @@ import (
 // If you do make changes here, be ready to discuss why these changes were made.
 
 // how many trees you want to generate
-const MaxRootSet = 4
+const MaxRootSet = 3
 
 // maximum possible children per node
-const MaxChild = 4
+const MaxChild = 2
 
 // max depth of the tree
-const MaxDepth = 5
+const MaxDepth = 4
 
 // the default orgID that we will be using for testing
 const DefaultOrgID = "c1556e17-b7c0-45a3-a6ae-9546248fb17a"
@@ -129,6 +129,32 @@ func GetSampleData() []Folder {
 	}
 
 	return folders
+}
+
+// To get the test data (test_sample)
+func GetTestSampleData() []Folder {
+    _, filename, _, _ := runtime.Caller(0) 
+    basePath := filepath.Dir(filename)     
+    filePath := filepath.Join(basePath, "test_sample.json") 
+
+    file, err := os.Open(filePath)
+    if err != nil {
+        panic(err)
+    }
+    defer file.Close()
+
+    jsonByte, err := io.ReadAll(file)
+    if err != nil {
+        panic(err)
+    }
+
+    folders := []Folder{}
+    err = json.Unmarshal(jsonByte, &folders)
+    if err != nil {
+        panic(err)
+    }
+
+    return folders
 }
 
 func WriteSampleData(data interface{}) {

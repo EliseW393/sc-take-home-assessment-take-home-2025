@@ -20,12 +20,12 @@ func contains(slice []string, item string) bool {
 // MoveFolder moves a specified source folder to a new destination folder within the same organisation.
 // It performs validation checks on the source and destination folders to make sure they exist, are in the same
 // organisation, and are not in a parent-child loop/cycle.
-func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
+func (f *driver) MoveFolder(source string, dst string) ([]Folder, error) {
 
-	if name == "" || dst == "" {
+	if source == "" || dst == "" {
 		emptyNameError := errors.New("Error: Source and destination folder names must not be empty\n")
 		return f.folders, emptyNameError
-	} else if name == dst {
+	} else if source == dst {
 		sourceAsDestError := errors.New("Error: Cannot move a folder to itself\n")
 		return f.folders, sourceAsDestError
 	}
@@ -35,7 +35,7 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 
 	// Locate source and destination folders to validate existence, obtain OrgIDs
 	for _, folder := range f.folders {
-		if folder.Name == name {
+		if folder.Name == source {
 			sourceOrgID = folder.OrgId
 			sourceFound = true
 		} else if folder.Name == dst {
@@ -63,7 +63,7 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 
 		// Find location of source folder in path (if exists)
 		for j, folder := range pathLevels { // Iterating through path folders
-			if folder == name {
+			if folder == source {
 
 				// Checking if folders after source folder includes dst
 				children := pathLevels[j+1:] 

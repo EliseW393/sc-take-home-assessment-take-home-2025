@@ -1,11 +1,12 @@
 package folder
 
-import "github.com/gofrs/uuid"
 import (
-	// "fmt"
 	"strings"
-	// "github.com/gofrs/uuid"
+	"github.com/gofrs/uuid"
+	"regexp"
+    "log"
 )
+
 
 func GetAllFolders() []Folder { 
 	return GetSampleData()
@@ -27,21 +28,32 @@ func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder {
 
 // GetAllChildFolders retrieves all child folders of a specified folder name within an organisation.
 // It filters folders by the given organization ID and returns those whose paths begin with the specified name.
-func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder { 
+func (f *driver) GetAllChildFolders(orgID uuid.UUID, parentFolderName string) []Folder { 
 
+	var pathRegex = regexp.MustCompile(`^([a-zA-Z0-9-_]+)(\.[a-zA-Z0-9-_]+)*$`)
 	res := f.GetFoldersByOrgID(orgID)
-	if len(res) == 0 {
-		// If no folders are found for the orgID, return empty slice 
-		return []Folder{} 
-	}
+
+	if orgID == uuid.Nil {
+        log.Println("Error: invalid orgID (nil)")
+        return []Folder{}
+    } else if len(res) == 0 {
+        log.Println("Warning: No folders found for the specified orgID")
+        return []Folder{}
+    }
 
 	// Slice to store child folders 
 	var finalFolders []Folder
 
 	// Iterate over each folder in filtered results (res)
 	for _, folder := range res {
-		// Check if the folder's path starts with the specified parent name
-		if strings.HasPrefix(folder.Paths, name+".") { 
+
+		if !pathRegex.MatchString(folder.Paths) {
+            log.Printf("Warning: Invalid path structure in folder %s with path %s\n", folder.Name, folder.Paths)
+            continue // skippng folders with invalid paths 
+        }
+
+		// Check if the folder's path contains the specified parent name
+		if strings.Contains(folder.Paths, parentFolderName+".") { 
 			// Append matching folder to finalFolders as it is a child of the specified folder 
 			finalFolders = append(finalFolders, folder)
 		}
