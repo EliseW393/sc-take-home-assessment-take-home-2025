@@ -26,7 +26,7 @@ func main() {
 	childFolders := folderDriver.GetAllChildFolders(orgID, "stunning-horridus")
 	folder.PrettyPrint(childFolders)
 
-	// test moving folders if needed
+	// test moving folders
 	name := "sharing-rictor"
 	dst := "ultimate-random" // testing informally 
 	fmt.Printf("\nMoving folder '%s' to new destination '%s'...\n", name, dst)

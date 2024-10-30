@@ -6,7 +6,6 @@ import (
 	"github.com/gofrs/uuid"
 	"regexp"
     "log"
-	"fmt"
 )
 
 // contains is used to check for an item in a slice of strings 
@@ -71,7 +70,6 @@ func (f *driver) MoveFolder(source string, dst string) ([]Folder, error) {
 
 		// Split folder path into parts (individual folders) to check for child moves and apply changes
 		pathLevels := strings.Split(f.folders[i].Paths, ".") 
-		fmt.Printf("Checking folder: %s with path: %s\n", f.folders[i].Name, f.folders[i].Paths)
 
 		// Find location of source folder in path (if exists)
 		for j, folder := range pathLevels { // Iterating through path folders
@@ -86,11 +84,9 @@ func (f *driver) MoveFolder(source string, dst string) ([]Folder, error) {
 
 				// Checking if folders after source folder includes dst
 				children := pathLevels[j+1:] 
-				fmt.Printf("CHILDREN OF %s: %v, NO %s\n", source, children, dst)
-				fmt.Println("RESULT: ", contains(children, dst))
 				if contains(children, dst) {
-					//childOfItselfError := errors.New("Error: Cannot move a folder to a child of itself\n")
-					return f.folders, errors.New("Error: Cannot move a folder to a child of itself\n")
+					childOfItselfError := errors.New("Error: Cannot move a folder to a child of itself\n")
+					return f.folders, childOfItselfError
 				}
 				
 				// Update path of folder to reflect new destination (parent)
